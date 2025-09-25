@@ -1,15 +1,15 @@
-
 interface Observer {
-  actualizar(estado: string): void;
+  actualizar(equipo: string, estado: string): void;
 }
 
 class Equipo {
   private estado: string;
   private observers: Observer[] = [];
+  private nombre: string;
 
   constructor(nombreEquipo: string, tipoEquipo: string, estadoInicial: string) {
+    this.nombre = nombreEquipo;
     this.estado = estadoInicial;
-    this.actualizarEstado(estadoInicial);
   }
 
   agregarObservador(observer: Observer): void {
@@ -18,25 +18,22 @@ class Equipo {
 
   cambiarEstado(nuevoEstado: string): void {
     this.estado = nuevoEstado;
-    this.actualizarEstado(nuevoEstado);
+    this.notificarObservadores();
   }
 
-  private actualizarEstado(nuevoEstado: string): void {
-    console.log(`El equipo ha cambiado de estado a "${nuevoEstado}"`);
-    this.observers.forEach((observer) => observer.actualizar(nuevoEstado));
+  private notificarObservadores(): void {
+    this.observers.forEach(observer => observer.actualizar(this.nombre, this.estado));
   }
 }
 
 class Soporte implements Observer {
-  actualizar(estado: string): void {
-    console.log(
-      `El soporte ha sido notificado del cambio de estado a "${estado}"`
-    );
+  actualizar(equipo: string, estado: string): void {
+    console.log(`Soporte notificado: ${equipo.charAt(0).toUpperCase() + equipo.slice(1)} ha cambiado su estado a ${estado}`);
   }
 }
 
 
 const soporte = new Soporte();
-const equipo = new Equipo("netbook hp", "portatil", "disponible");
+const equipo = new Equipo("notebook hp", "portatil", "disponible");
 equipo.agregarObservador(soporte);
-equipo.cambiarEstado("en reparacion");
+equipo.cambiarEstado("en reparación");

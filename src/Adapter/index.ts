@@ -1,8 +1,12 @@
 class InventarioViejo {
-  private items: string[] = [];
+  private equipos: { nombre: string; categoria: string; estado: string }[] = [];
 
-  addItem(nombre: string): void {
-    this.items.push(nombre);
+  public insertarEquipo(nombre: string, categoria: string, estado: string): void {
+    this.equipos.push({ nombre, categoria, estado });
+  }
+
+  public obtenerEquipos(): { nombre: string; categoria: string; estado: string }[] {
+    return this.equipos;
   }
 }
 
@@ -13,19 +17,16 @@ class AdaptadorInventario {
     this.inventarioViejo = inventarioViejo;
   }
 
-  addItem(nombre: string): void {
-    this.inventarioViejo.addItem(nombre);
+  public Agregaequipo(nombre: string, categoria: string, estado: string): void {
+    this.inventarioViejo.insertarEquipo(nombre, categoria, estado);
   }
-}
 
-class InventarioNuevaSistema {
-  private items: string[] = [];
-
-  addItem(nombre: string): void {
-    this.items.push(nombre);
+  public ListarEquipos(): { nombre: string; categoria: string; estado: string }[] {
+    return this.inventarioViejo.obtenerEquipos();
   }
 }
 
 const inventarioViejo = new InventarioViejo();
-const adaptadorInventario = new AdaptadorInventario(inventarioViejo);
-const inventarioNuevaSistema = new InventarioNuevaSistema();
+const adapter = new AdaptadorInventario(inventarioViejo);
+adapter.Agregaequipo("router cisco","red","disponible");
+console.log(adapter.ListarEquipos());
